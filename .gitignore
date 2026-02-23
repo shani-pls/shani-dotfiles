@@ -1,0 +1,17 @@
+# Ignore everything
+*
+
+# Except these directories
+!nvim/
+!nvim/**
+!pgcli/
+!pgcli/**
+pgcli/history
+pgcli/log
+!aerospace/
+!aerospace/**
+!borders/
+!borders/**
+
+# And this .gitignore itself
+!.gitignore
