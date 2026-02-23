@@ -57,12 +57,16 @@ return {
     local opencode_expanded = false
     vim.keymap.set({ 'n', 'x' }, '<leader>p', function()
       local provider = require('opencode.config').provider
-      if not provider then return end
+      if not provider then
+        return
+      end
       local win = provider:get()
-      if not (win and win.win and vim.api.nvim_win_is_valid(win.win)) then return end
+      if not (win and win.win and vim.api.nvim_win_is_valid(win.win)) then
+        return
+      end
       opencode_expanded = not opencode_expanded
       local total = vim.o.columns
-      local new_width = opencode_expanded and math.floor(total * 0.75) or math.floor(total * 0.35)
+      local new_width = opencode_expanded and math.floor(total) or math.floor(total * 0.35)
       vim.api.nvim_win_set_width(win.win, new_width)
     end, { desc = 'Toggle opencode expanded' })
     vim.keymap.set({ 'n', 'x' }, 'go', function()
