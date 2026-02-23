@@ -18,6 +18,7 @@ return {
             input = {
               keys = {
                 ['<a-a>'] = { 'opencode_send', mode = { 'n', 'i' } },
+                ['<CR>'] = { 'opencode_send', mode = { 'n', 'i' } },
               },
             },
           },
@@ -30,9 +31,7 @@ return {
     ---@type opencode.Opts
     vim.g.opencode_opts = {
       provider = {
-        terminal = {
-          split = 'left',
-        },
+        enabled = 'snacks',
         snacks = {
           win = {
             position = 'left',
@@ -54,30 +53,18 @@ return {
       require('opencode').select()
     end, { desc = 'Execute opencode action…' })
 
-    -- Toggle opencode between left split and fullscreen float
-    local opencode_fullscreen = false
-    vim.keymap.set({ 'n', 't' }, '<leader>p', function()
-      opencode_fullscreen = not opencode_fullscreen
+    -- Toggle opencode split between normal and expanded width
+    local opencode_expanded = false
+    vim.keymap.set({ 'n', 'x' }, '<leader>p', function()
       local provider = require('opencode.config').provider
-      if provider and provider.opts and provider.opts.win then
-        if opencode_fullscreen then
-          provider.opts.win.position = 'float'
-          provider.opts.win.width = 1
-          provider.opts.win.height = 1
-        else
-          provider.opts.win.position = 'left'
-          provider.opts.win.width = nil
-          provider.opts.win.height = nil
-        end
-        -- Close the current window and reopen with updated opts
-        local win = provider:get()
-        if win then
-          win:close()
-        end
-        provider:start()
-      end
-    end, { desc = 'Toggle opencode fullscreen' })
-
+      if not provider then return end
+      local win = provider:get()
+      if not (win and win.win and vim.api.nvim_win_is_valid(win.win)) then return end
+      opencode_expanded = not opencode_expanded
+      local total = vim.o.columns
+      local new_width = opencode_expanded and math.floor(total * 0.75) or math.floor(total * 0.35)
+      vim.api.nvim_win_set_width(win.win, new_width)
+    end, { desc = 'Toggle opencode expanded' })
     vim.keymap.set({ 'n', 'x' }, 'go', function()
       return require('opencode').operator '@this '
     end, { desc = 'Add range to opencode', expr = true })
