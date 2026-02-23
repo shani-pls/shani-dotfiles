@@ -1,9 +1,6 @@
 -- Remove default vim stuff
 vim.keymap.set('n', 's', '<nop>') -- Disable default `s` mapping
 
--- Prevent leader key (Space) from triggering in insert mode
-vim.keymap.set('i', '<Space>', '<Space>', { noremap = true })
-
 -- Better escape
 vim.keymap.set('i', 'jk', '<Esc>')
 vim.keymap.set('i', 'kj', '<Esc>')
